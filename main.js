@@ -220,7 +220,7 @@ var RunMain = function (vertexShaderText, fragmentShaderText) {
 	var loop = function () {
 		angle = performance.now() / 1000 / 6 * 2 * Math.PI;
 		glMatrix.mat4.rotate(rotationMatrix, identityMatrix, THETA, [0, 1, 0]);
-    glMatrix.mat4.rotate(rotationMatrix, rotationMatrix, PHI, [-1, 0, 0]);
+    glMatrix.mat4.rotate(rotationMatrix, rotationMatrix, PHI, [1, 0, 0]);
   	glMatrix.mat4.mul(worldMatrix, identityMatrix, rotationMatrix);
 		gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
 
