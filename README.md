@@ -6,7 +6,7 @@ Download the code
 
 Switch to directory
 
-Run pythong command:
+Run python command:
 
 python -m http.server 8000
 
