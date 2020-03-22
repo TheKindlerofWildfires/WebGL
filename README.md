@@ -1,1 +1,13 @@
 Playing around with WebGL
+
+To run: 
+
+Download the code
+
+Switch to directory
+
+Run python command:
+
+python -m http.server 8000
+
+go to localhost:8000
