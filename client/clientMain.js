@@ -1,7 +1,7 @@
 'use strict';
 
-import * as glMatrix from "/js/glMatrix/common.js";
-import * as mat4 from "/js/glMatrix/mat4.js";
+import * as glMatrix from "/client/glMatrix/common.js";
+import * as mat4 from "/client/glMatrix/mat4.js";
 var boxVertices = [ // X, Y, Z           R, G, B
 	// Top
 	-1.0, 1.0, -1.0,   0.5, 0.5, 0.5,
