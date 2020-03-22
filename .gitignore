@@ -1,0 +1,3 @@
+#ignore autosave files
+*.blend1
+#TODO ignore autosave caches
