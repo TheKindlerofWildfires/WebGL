@@ -64,6 +64,19 @@ var boxIndices = [
 	21, 20, 22,
 	22, 20, 23
 ];
+//Web socket stuff asynced outside the loop
+const ws = new WebSocket('ws://localhost:8000/');
+
+ws.onopen = function() {
+    console.log('WebSocket Client Connected');
+    ws.send('Hi this is web client.');
+};
+
+ws.onmessage = function(e) {
+  console.log("Received: '" + e.data + "'");
+};
+
+
 init();
 async function init() {
 	//Load in the shader files
