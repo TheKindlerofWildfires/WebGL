@@ -1,3 +1,7 @@
 #ignore autosave files
 *.blend1
 #TODO ignore autosave caches
+
+#nodejs stuff
+/node_modules
+package-lock.json
