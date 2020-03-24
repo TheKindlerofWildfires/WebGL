@@ -9,12 +9,24 @@ export function createEmpty(entityMap) {
   entity.id = uuidv4();
   entity.needsRemoval = false;
   entity.transformComponent = Object.create(Object.prototype);
-  entity.transformComponent.Location = vec3.create();
+  entity.transformComponent.location = vec3.create();
   entity.transformComponent.rotation = vec3.create();
   entity.transformComponent.scale = vec3.fromValues(1,1,1);
 
   entityMap.set(entity.id, entity);
   return entity;
+}
+
+export function setLocation(entity, newLocation) {
+  entity.transformComponent.location = newLocation;
+}
+
+export function setScale(entity, newScale) {
+  entity.transformComponent.scale = newScale;
+}
+
+export function setRotation(entity, newRotation) {
+  entity.transformComponent.rotation = newRotation;
 }
 
 export async function addStaticMeshComponent(gl, entity, objUrl) {
@@ -27,4 +39,10 @@ export async function addStaticMeshComponent(gl, entity, objUrl) {
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(parsedObj.positionArray), gl.STATIC_DRAW);
 
   entity.staticMeshComponent = staticMesh;
+}
+
+export function addCameraComponent(entity) {
+  entity.cameraComponent = Object.create(Object.prototype);
+  entity.cameraComponent.isActive = true;
+  entity.cameraComponent.fov = 60;
 }

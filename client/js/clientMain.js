@@ -1,5 +1,5 @@
 'use strict';
-import * as glMatrix from "/js/lib/glMatrix/common.js";
+import * as vec3 from "/js/lib/glMatrix/vec3.js";
 import * as mat4 from "/js/lib/glMatrix/mat4.js";
 
 import * as webglHelper from "/js/helpers/webglHelper.js";
@@ -28,6 +28,11 @@ async function init() {
 
 	let currentEntity = entityHelper.createEmpty(entityMap);
 	entityHelper.addStaticMeshComponent(gl, currentEntity, "/assets/test/TestCube.obj");
+	entityHelper.setScale(currentEntity, vec3.fromValues(0.5, 0.5, 0.5));
+	entityHelper.setLocation(currentEntity, vec3.fromValues(0, 0, 0))
+	currentEntity = entityHelper.createEmpty(entityMap);
+	entityHelper.addCameraComponent(currentEntity);
+	entityHelper.setLocation(currentEntity, vec3.fromValues(3, 5, 5));
 	console.log(entityMap);
 
 	console.log("Starting main loop.");
