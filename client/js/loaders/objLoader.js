@@ -1,17 +1,19 @@
 'use strict';
 
-export async function loadOBJ(gl, urlOBJ, urlBaseColor) {
+export async function loadOBJ(urlOBJ) {
   console.log("loading mesh: " + urlOBJ);
-  console.log("loading texture: " + urlBaseColor);
-  let [objResponse, baseColorResponse] = await Promise.all([fetch(urlOBJ), fetch(urlBaseColor)]);
-  let [objText, baseColorBlob] = await Promise.all([objResponse.text(), baseColorResponse.blob()]);
+  let objResponse = await fetch(urlOBJ);
+  let objText = await objResponse.text();
 
-  let renderComponent = {};
+  let parsedObj = Object.create(Object.prototype);
 
   let vertexPositions = [];
   let vertexNormals = [];
   let vertexUvs = [];
-  let bufferedPositions = [];
+
+  let positionArray = [];
+  let uvArray = [];
+  let normalArray = [];
 
   let lineArray = objText.split('\n');
   for (let currentLine = 0; currentLine < lineArray.length; currentLine++) {
@@ -35,20 +37,26 @@ export async function loadOBJ(gl, urlOBJ, urlBaseColor) {
         case 'f':
           for (let currentElement = 1; currentElement < 4; currentElement++) {
             let subElements = elements[currentElement].split('n');
-            bufferedPositions.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 0] );
-            bufferedPositions.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 1] );
-            bufferedPositions.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 2] );
+            positionArray.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 0] );
+            positionArray.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 1] );
+            positionArray.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 2] );
+
+            uvArray.push( vertexPositions[(parseInt(subElements[1]) - 1) * 2 + 0] );
+            uvArray.push( vertexPositions[(parseInt(subElements[1]) - 1) * 2 + 1] );
+
+            normalArray.push( vertexPositions[(parseInt(subElements[2]) - 1) * 3 + 0] );
+            normalArray.push( vertexPositions[(parseInt(subElements[2]) - 1) * 3 + 1] );
+            normalArray.push( vertexPositions[(parseInt(subElements[2]) - 1) * 3 + 2] );
           }
           break;
       }
     }
   }
 
-  renderComponent.bufferLength = bufferedPositions.length / 3;
+  parsedObj.polyCount = positionArray.length / 3;
+  parsedObj.positionArray = positionArray;
+  parsedObj.uvArray = uvArray;
+  parsedObj.normalArray = normalArray;
 
-  renderComponent.vertexBuffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, renderComponent.vertexBuffer);
-  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferedPositions), gl.STATIC_DRAW);
-
-  return renderComponent;
+  return parsedObj;
 }

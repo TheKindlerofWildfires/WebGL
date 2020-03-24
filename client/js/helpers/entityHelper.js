@@ -2,6 +2,7 @@
 import {v4 as uuidv4} from "/js/lib/uuidjs/index.js";
 import * as glMatrix from "/js/lib/glMatrix/common.js";
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
+import * as objLoader from "/js/loaders/objLoader.js";
 
 export function createEmpty(entityMap) {
   let entity = Object.create(Object.prototype);
@@ -14,4 +15,16 @@ export function createEmpty(entityMap) {
 
   entityMap.set(entity.id, entity);
   return entity;
+}
+
+export async function addStaticMeshComponent(gl, entity, objUrl) {
+  let staticMesh = Object.create(Object.prototype);
+  let parsedObj = await objLoader.loadOBJ(objUrl);
+
+  staticMesh.polyCount = parsedObj.polyCount;
+  staticMesh.positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(parsedObj.positionArray), gl.STATIC_DRAW);
+
+  entity.staticMeshComponent = staticMesh;
 }

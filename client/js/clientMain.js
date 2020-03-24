@@ -6,8 +6,6 @@ import * as webglHelper from "/js/helpers/webglHelper.js";
 import * as shaderHelper from "/js/helpers/shaderHelper.js";
 import * as entityHelper from "/js/helpers/entityHelper.js";
 
-import * as objLoader from "/js/loaders/objLoader.js";
-
 import * as staticMeshRenderingSystem from "/js/systems/staticMeshRenderingSystem.js";
 import * as cameraSystem from "/js/systems/cameraSystem.js";
 
@@ -28,11 +26,8 @@ async function init() {
 	shaders.unlit = await shaderHelper.createUnlit(gl);
 	console.log("Shaders ready");
 
-	//console.log(entityHelper.createEmpty());
-	let testEntity = entityHelper.createEmpty(entityMap);
-	testEntity.staticMeshComponent = await objLoader.loadOBJ(gl, "/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
-	testEntity = entityHelper.createEmpty(entityMap);
-	testEntity.cameraComponent = {};
+	let currentEntity = entityHelper.createEmpty(entityMap);
+	entityHelper.addStaticMeshComponent(gl, currentEntity, "/assets/test/TestCube.obj");
 	console.log(entityMap);
 
 	console.log("Starting main loop.");
