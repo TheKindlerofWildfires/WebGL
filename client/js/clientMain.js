@@ -1,15 +1,22 @@
 'use strict';
-import * as glMatrix from "/js/glMatrix/common.js";
-import * as mat4 from "/js/glMatrix/mat4.js";
-import * as objLoader from "/js/objLoader.js";
-import * as shaderHelper from "/js/shaderHelper.js";
-import * as webglHelper from "/js/webglHelper.js";
+import * as glMatrix from "/js/lib/glMatrix/common.js";
+import * as mat4 from "/js/lib/glMatrix/mat4.js";
+
+import * as webglHelper from "/js/helpers/webglHelper.js";
+import * as shaderHelper from "/js/helpers/shaderHelper.js";
+import * as entityHelper from "/js/helpers/entityHelper.js";
+
+import * as objLoader from "/js/loaders/objLoader.js";
+
+import * as staticMeshRenderingSystem from "/js/systems/staticMeshRenderingSystem.js";
+import * as cameraSystem from "/js/systems/cameraSystem.js";
 
 let canvas = null;
 let gl = null;
+let cameraObject = null;
 let shaders = Object.create(Object.prototype);
 
-let tmpObj = {};
+let entityMap = new Map();
 
 init();
 
@@ -21,7 +28,12 @@ async function init() {
 	shaders.unlit = await shaderHelper.createUnlit(gl);
 	console.log("Shaders ready");
 
-	tmpObj = await objLoader.loadOBJ(gl, "/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
+	//console.log(entityHelper.createEmpty());
+	let testEntity = entityHelper.createEmpty(entityMap);
+	testEntity.staticMeshComponent = await objLoader.loadOBJ(gl, "/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
+	testEntity = entityHelper.createEmpty(entityMap);
+	testEntity.cameraComponent = {};
+	console.log(entityMap);
 
 	console.log("Starting main loop.");
 	requestAnimationFrame(main);
@@ -31,11 +43,7 @@ function main(deltaTime) {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-	gl.useProgram(shaders.unlit.program);
-
-
-	gl.bindBuffer(gl.ARRAY_BUFFER, tmpObj.vertexBuffer);
-	gl.vertexAttribPointer(shaders.unlit.positionLocation, 3, gl.FLOAT, false, 0, 0);
-	gl.drawArrays(gl.TRIANGLES, 0, tmpObj.bufferLength);
+	cameraObject = cameraSystem.update(entityMap);
+	staticMeshRenderingSystem.update(gl, shaders, cameraObject, entityMap);
 	requestAnimationFrame(main);
 }
