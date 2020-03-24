@@ -36,17 +36,17 @@ export async function loadOBJ(urlOBJ) {
           break;
         case 'f':
           for (let currentElement = 1; currentElement < 4; currentElement++) {
-            let subElements = elements[currentElement].split('n');
+            let subElements = elements[currentElement].split('/');
             positionArray.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 0] );
             positionArray.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 1] );
             positionArray.push( vertexPositions[(parseInt(subElements[0]) - 1) * 3 + 2] );
 
-            uvArray.push( vertexPositions[(parseInt(subElements[1]) - 1) * 2 + 0] );
-            uvArray.push( vertexPositions[(parseInt(subElements[1]) - 1) * 2 + 1] );
+            uvArray.push( vertexUvs[(parseInt(subElements[1]) - 1) * 2 + 0] );
+            uvArray.push( vertexUvs[(parseInt(subElements[1]) - 1) * 2 + 1] );
 
-            normalArray.push( vertexPositions[(parseInt(subElements[2]) - 1) * 3 + 0] );
-            normalArray.push( vertexPositions[(parseInt(subElements[2]) - 1) * 3 + 1] );
-            normalArray.push( vertexPositions[(parseInt(subElements[2]) - 1) * 3 + 2] );
+            normalArray.push( vertexNormals[(parseInt(subElements[2]) - 1) * 3 + 0] );
+            normalArray.push( vertexNormals[(parseInt(subElements[2]) - 1) * 3 + 1] );
+            normalArray.push( vertexNormals[(parseInt(subElements[2]) - 1) * 3 + 2] );
           }
           break;
       }

@@ -37,6 +37,9 @@ export async function addStaticMeshComponent(gl, entity, objUrl) {
   staticMesh.positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.positionBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(parsedObj.positionArray), gl.STATIC_DRAW);
+  staticMesh.uvBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.uvBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(parsedObj.uvArray), gl.STATIC_DRAW);
 
   entity.staticMeshComponent = staticMesh;
 }

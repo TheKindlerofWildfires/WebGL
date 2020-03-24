@@ -21,6 +21,8 @@ export function update(gl, shaders, cameraObject, entityMap) {
 
       gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.positionBuffer);
       gl.vertexAttribPointer(shaders.unlit.positionLocation, 3, gl.FLOAT, false, 0, 0);
+      gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.uvBuffer);
+      gl.vertexAttribPointer(shaders.unlit.uvLocation, 2, gl.FLOAT, false, 0, 0);
       gl.drawArrays(gl.TRIANGLES, 0, staticMesh.polyCount);
     }
   }

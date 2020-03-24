@@ -36,8 +36,8 @@ export async function createUnlit(gl) {
 
   shaderObject.positionLocation = gl.getAttribLocation(shaderObject.program, "position");
   gl.enableVertexAttribArray(shaderObject.positionLocation);
-  //shaderObject.uvLocation = gl.getAttribLocation(shaderObject.program, "uvCoord");
-  //gl.enableVertexAttribArray(shaderObject.uvLocation);
+  shaderObject.uvLocation = gl.getAttribLocation(shaderObject.program, "uv");
+  gl.enableVertexAttribArray(shaderObject.uvLocation);
 
   shaderObject.projectionLocation = gl.getUniformLocation(shaderObject.program, "projectionMatrix");
   shaderObject.viewLocation = gl.getUniformLocation(shaderObject.program, "viewMatrix");
