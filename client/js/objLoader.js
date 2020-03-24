@@ -44,6 +44,11 @@ export async function loadOBJ(gl, urlOBJ, urlBaseColor) {
     }
   }
 
-  console.log(vertexPositions);
+  renderComponent.bufferLength = bufferedPositions.length / 3;
+
+  renderComponent.vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, renderComponent.vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(bufferedPositions), gl.STATIC_DRAW);
+
   return renderComponent;
 }
