@@ -59,3 +59,9 @@ export function addCameraComponent(entity, fov, clipNear, clipFar) {
   entity.cameraComponent.clipNear = clipNear;
   entity.cameraComponent.clipFar = clipFar;
 }
+
+export function addVelocityComponent(entity, startingVelocity, startingAngular) {
+  entity.velocityComponent = Object.create(Object.prototype);
+  entity.velocityComponent.velocity = startingVelocity;
+  entity.velocityComponent.angularVelocity = startingAngular;
+}

@@ -13,6 +13,9 @@ export function update(gl, shaders, cameraObject, entityMap) {
       let worldMatrix = mat4.create();
       mat4.translate(worldMatrix, worldMatrix, transform.location)
       mat4.scale(worldMatrix, worldMatrix, transform.scale);
+      mat4.rotateX(worldMatrix, worldMatrix, transform.rotation[0] * Math.PI/180);
+      mat4.rotateY(worldMatrix, worldMatrix, transform.rotation[1] * Math.PI/180);
+      mat4.rotateZ(worldMatrix, worldMatrix, transform.rotation[2] * Math.PI/180);
       gl.uniformMatrix4fv(shaders.unlit.worldLocation, false, worldMatrix);
 
       gl.uniformMatrix4fv(shaders.unlit.viewLocation, false, cameraObject.viewMatrix);
