@@ -32,8 +32,8 @@ async function init() {
 	entityHelper.setScale(currentEntity, vec3.fromValues(0.5, 0.5, 0.5));
 	entityHelper.setLocation(currentEntity, vec3.fromValues(0, 0, 0))
 	currentEntity = entityHelper.createEmpty(entityMap);
-	entityHelper.addCameraComponent(currentEntity);
-	entityHelper.setLocation(currentEntity, vec3.fromValues(3, 5, 5));
+	entityHelper.addCameraComponent(currentEntity, 45, 0.1, 10);
+	entityHelper.setLocation(currentEntity, vec3.fromValues(5, 5, -5));
 	console.log(entityMap);
 
 	console.log("Starting main loop.");

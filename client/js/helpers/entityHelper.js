@@ -51,8 +51,11 @@ export async function addStaticMeshComponent(gl, entity, objUrl, baseColorUrl) {
   entity.staticMeshComponent = staticMesh;
 }
 
-export function addCameraComponent(entity) {
+export function addCameraComponent(entity, fov, clipNear, clipFar) {
   entity.cameraComponent = Object.create(Object.prototype);
   entity.cameraComponent.isActive = true;
-  entity.cameraComponent.fov = 60;
+  entity.cameraComponent.fov = fov;
+  entity.cameraComponent.aspectRatio = 0.75;
+  entity.cameraComponent.clipNear = clipNear;
+  entity.cameraComponent.clipFar = clipFar;
 }
