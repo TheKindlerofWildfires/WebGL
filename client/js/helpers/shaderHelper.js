@@ -29,6 +29,13 @@ export async function loadShader(gl, vertexShaderUrl, fragmentShaderUrl) {
   return shaderProgram;
 }
 
+export async function initShaders(gl) {
+  let shaders = Object.create(Object.prototype);
+  [shaders.unlit, ] = await Promise.all([createUnlit(gl), ]);
+
+  return shaders;
+}
+
 export async function createUnlit(gl) {
   let shaderObject = Object.create(Object.prototype);
 

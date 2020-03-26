@@ -23,7 +23,7 @@ async function init() {
 	gl = webglHelper.getContext(canvas);
   console.log('Initialized webGL');
 
-	shaders.unlit = await shaderHelper.createUnlit(gl);
+	shaders = await shaderHelper.initShaders(gl);
 	console.log("Shaders ready");
 
 	let currentEntity = entityHelper.createEmpty(entityMap);
