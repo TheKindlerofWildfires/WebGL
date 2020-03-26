@@ -2,8 +2,9 @@
 precision highp float;
 
 in vec2 vertex_uv;
+uniform sampler2D baseColor;
 out vec4 fragColor;
 
 void main() {
-  fragColor = vec4(vertex_uv.x, vertex_uv.y, 0, 1);
+  fragColor = texture(baseColor, vertex_uv);
 }

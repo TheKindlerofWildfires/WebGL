@@ -10,6 +10,6 @@ uniform mat4 projectionMatrix;
 out vec2 vertex_uv;
 
 void main() {
-  vertex_uv = uv;
+  vertex_uv = vec2(uv.x, 1.0 - uv.y);
   gl_Position = projectionMatrix * viewMatrix * worldMatrix * position;
 }

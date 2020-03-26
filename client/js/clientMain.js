@@ -27,7 +27,8 @@ async function init() {
 	console.log("Shaders ready");
 
 	let currentEntity = entityHelper.createEmpty(entityMap);
-	entityHelper.addStaticMeshComponent(gl, currentEntity, "/assets/test/TestCube.obj");
+	//dont do this
+	await entityHelper.addStaticMeshComponent(gl, currentEntity, "/assets/test/TestCube.obj", "assets/test/TestCube_BaseColor.png");
 	entityHelper.setScale(currentEntity, vec3.fromValues(0.5, 0.5, 0.5));
 	entityHelper.setLocation(currentEntity, vec3.fromValues(0, 0, 0))
 	currentEntity = entityHelper.createEmpty(entityMap);

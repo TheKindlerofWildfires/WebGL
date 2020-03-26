@@ -16,13 +16,16 @@ export function update(gl, shaders, cameraObject, entityMap) {
       gl.uniformMatrix4fv(shaders.unlit.worldLocation, false, worldMatrix);
 
       gl.uniformMatrix4fv(shaders.unlit.viewLocation, false, cameraObject.viewMatrix);
-
       gl.uniformMatrix4fv(shaders.unlit.projectionLocation, false, cameraObject.projectionMatrix);
 
       gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.positionBuffer);
       gl.vertexAttribPointer(shaders.unlit.positionLocation, 3, gl.FLOAT, false, 0, 0);
       gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.uvBuffer);
       gl.vertexAttribPointer(shaders.unlit.uvLocation, 2, gl.FLOAT, false, 0, 0);
+
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, staticMesh.baseColorTexture);
+
       gl.drawArrays(gl.TRIANGLES, 0, staticMesh.polyCount);
     }
   }

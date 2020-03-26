@@ -42,7 +42,7 @@ export async function createUnlit(gl) {
   shaderObject.projectionLocation = gl.getUniformLocation(shaderObject.program, "projectionMatrix");
   shaderObject.viewLocation = gl.getUniformLocation(shaderObject.program, "viewMatrix");
   shaderObject.worldLocation = gl.getUniformLocation(shaderObject.program, "worldMatrix");
-  //shaderObject.BaseColorLocation = gl.getUniformLocation(shaderObject.program, "baseColor");
+  shaderObject.baseColorLocation = gl.getUniformLocation(shaderObject.program, "baseColor");
 
   return shaderObject;
 }

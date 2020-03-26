@@ -3,6 +3,7 @@ import {v4 as uuidv4} from "/js/lib/uuidjs/index.js";
 import * as glMatrix from "/js/lib/glMatrix/common.js";
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
 import * as objLoader from "/js/loaders/objLoader.js";
+import * as pngLoader from "/js/loaders/pngLoader.js";
 
 export function createEmpty(entityMap) {
   let entity = Object.create(Object.prototype);
@@ -29,9 +30,9 @@ export function setRotation(entity, newRotation) {
   entity.transformComponent.rotation = newRotation;
 }
 
-export async function addStaticMeshComponent(gl, entity, objUrl) {
+export async function addStaticMeshComponent(gl, entity, objUrl, baseColorUrl) {
   let staticMesh = Object.create(Object.prototype);
-  let parsedObj = await objLoader.loadOBJ(objUrl);
+  let [parsedObj, baseColorBitmap] = await Promise.all([objLoader.loadOBJ(objUrl), pngLoader.loadPng(baseColorUrl)]);
 
   staticMesh.polyCount = parsedObj.polyCount;
   staticMesh.positionBuffer = gl.createBuffer();
@@ -40,6 +41,12 @@ export async function addStaticMeshComponent(gl, entity, objUrl) {
   staticMesh.uvBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, staticMesh.uvBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(parsedObj.uvArray), gl.STATIC_DRAW);
+
+  staticMesh.baseColorTexture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, staticMesh.baseColorTexture);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, baseColorBitmap);
 
   entity.staticMeshComponent = staticMesh;
 }
