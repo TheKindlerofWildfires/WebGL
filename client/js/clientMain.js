@@ -10,6 +10,8 @@ import * as physicsSystem from "/js/systems/physicsSystem.js";
 import * as staticMeshRenderingSystem from "/js/systems/staticMeshRenderingSystem.js";
 import * as cameraSystem from "/js/systems/cameraSystem.js";
 
+import * as resourceManager from "/js/resourceManager.js";
+
 let canvas = null;
 let gl = null;
 let cameraObject = null;
@@ -27,6 +29,10 @@ async function init() {
 
 	shaders = await shaderHelper.initShaders(gl);
 	console.log("Shaders ready");
+
+	resourceManager.setGLContext(gl);
+	resourceManager.load("/assets/test/TestCube.obj");
+	resourceManager.load("/assets/test/TestCube_BaseColor.png");
 
 	let currentEntity = entityHelper.createEmpty(entityMap);
 	//dont do this
