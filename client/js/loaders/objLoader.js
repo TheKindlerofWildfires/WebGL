@@ -1,7 +1,7 @@
 'use strict';
 
 export async function loadOBJ(urlOBJ) {
-  console.log("loading mesh: " + urlOBJ);
+  console.log("Loading mesh: " + urlOBJ);
   let objResponse = await fetch(urlOBJ);
   let objText = await objResponse.text();
 

@@ -2,7 +2,7 @@
 import * as objLoader from "/js/loaders/objLoader.js";
 import * as pngLoader from "/js/loaders/pngLoader.js";
 
-let gl = null;
+import * as shaderManager from "/js/shaderManager.js";
 
 let resourceMap = new Map();
 let inProgress = new Map();
@@ -11,6 +11,7 @@ export async function load(url) {
   if (resourceMap.has(url) || inProgress.has(url)) {
     return;
   }
+  let gl = shaderManager.getWebglContext();
 
   let currentRequest = Object.create(Object.prototype);
   currentRequest.fileType = url.slice(url.length - 3, url.length);
@@ -24,9 +25,11 @@ export async function load(url) {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, rawResource);
+      //console.log(currentRequest);
       break;
     case "obj":
       rawResource = await objLoader.loadOBJ(url);
+      currentRequest.polyCount = rawResource.positionArray.length / 3;
       currentRequest.positionBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, currentRequest.positionBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(rawResource.positionArray), gl.STATIC_DRAW);
@@ -39,14 +42,10 @@ export async function load(url) {
   inProgress.delete(url);
 }
 
-export function getRefrence(url) {
+export function getResource(url) {
   return resourceMap.get(url);
 }
 
 export function checkReady() {
   return !inProgress.size > 0;
-}
-
-export function setGLContext(glContext) {
-  gl = glContext;
 }
