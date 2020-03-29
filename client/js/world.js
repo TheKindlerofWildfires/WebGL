@@ -3,57 +3,94 @@ import {v4 as uuidv4} from "/js/lib/uuidjs/index.js";
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
 
 let entityMap = new Map();
-let selectedEntity = null;
+let activeEntity = null;
 
 let activeCamera = Object.create(Object.prototype);
 
 export function createEntity(location, rotation, scale) {
-  selectedEntity = Object.create(Object.prototype);
-  selectedEntity.id = uuidv4();
-  selectedEntity.needsRemoval = false;
-  selectedEntity.transform = Object.create(Object.prototype);
+  activeEntity = Object.create(Object.prototype);
+  activeEntity.id = uuidv4();
+  activeEntity.needsRemoval = false;
+  activeEntity.transform = Object.create(Object.prototype);
   if (location == undefined) {
     location = vec3.create();
   }
-  selectedEntity.transform.location = location;
+  activeEntity.transform.location = location;
   if (rotation == undefined) {
     rotation = vec3.create();
   }
-  selectedEntity.transform.rotation = rotation;
+  activeEntity.transform.rotation = rotation;
   if (scale == undefined) {
     scale = vec3.fromValues(1,1,1);
   }
-  selectedEntity.transform.scale = scale;
+  activeEntity.transform.scale = scale;
 
-  entityMap.set(selectedEntity.id, selectedEntity);
+  entityMap.set(activeEntity.id, activeEntity);
+  return activeEntity.id;
 }
 
-export function selectEntity(id) {
-  selectedEntity = entityMap.get(id);
+export function setCurrentEntity(id) {
+  activeEntity = entityMap.get(id);
+}
+
+export function setLocation(newLocation) {
+  activeEntity.transform.location = newLocation;
+}
+
+export function getLocation() {
+  return selectEntity.transform.location;
+}
+
+export function addLocation(addVector) {
+  vec3.add(activeEntity.transform.location, activeEntity.transform.location, addVector);
+}
+
+export function setRotation(newRotation) {
+  activeEntity.transform.rotation = newRotation;
+}
+
+export function getRotation() {
+  return activeEntity.transform.rotation;
+}
+
+export function addRotation(addVector) {
+  vec3.add(activeEntity.transform.rotation, activeEntity.transform.rotation, addVector);
+}
+
+export function setScale(newScale) {
+  activeEntity.transform.scale = newScale;
+}
+
+export function getScale() {
+  return activeEntity.transform.scale;
+}
+
+export function addScale(addVector) {
+  vec3.add(activeEntity.transform.scale, activeEntity.transform.scale, addVector);
 }
 
 export function addStaticMesh(mesh, baseColor) {
-  selectedEntity.staticMesh = Object.create(Object.prototype);
-  selectedEntity.staticMesh.mesh = mesh;
-  selectedEntity.staticMesh.baseColor = baseColor;
+  activeEntity.staticMesh = Object.create(Object.prototype);
+  activeEntity.staticMesh.mesh = mesh;
+  activeEntity.staticMesh.baseColor = baseColor;
 }
 
 export function addCamera(fov, clipNear, clipFar) {
-  selectedEntity.camera = Object.create(Object.prototype);
-  selectedEntity.camera.isActive = true;
+  activeEntity.camera = Object.create(Object.prototype);
+  activeEntity.camera.isActive = true;
   if (fov == undefined) {
     fov = 90;
   }
-  selectedEntity.camera.fov = fov;
-  selectedEntity.camera.aspectRatio = 1.77777;
+  activeEntity.camera.fov = fov;
+  activeEntity.camera.aspectRatio = 1.77777;
   if (clipNear == undefined) {
     clipNear = 0.1;
   }
-  selectedEntity.camera.clipNear = clipNear;
+  activeEntity.camera.clipNear = clipNear;
   if(clipFar == undefined) {
     clipFar = 10;
   }
-  selectedEntity.camera.clipFar = clipFar;
+  activeEntity.camera.clipFar = clipFar;
 }
 
 export function getEntities() {

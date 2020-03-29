@@ -13,6 +13,9 @@ import * as world from "/js/world.js";
 let currentState = "init";
 let lastFrameTime = 0;
 
+let cube0 = null;
+let cube1 = null;
+
 init();
 async function init() {
 	await shaderManager.initWebgl();
@@ -23,9 +26,9 @@ async function init() {
 	world.createEntity();
 	world.createEntity(vec3.fromValues(3, 5, 3), vec3.fromValues(45, -45, 0));
 	world.addCamera();
-	world.createEntity();
+	cube0 = world.createEntity();
 	world.addStaticMesh("/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
-	world.createEntity(vec3.fromValues(0,2,0), vec3.fromValues(0, -180, 90), vec3.fromValues(0.5, 0.5, 0.5));
+	cube1 = world.createEntity(vec3.fromValues(0,2,0), vec3.fromValues(0, -180, 90), vec3.fromValues(0.5, 0.5, 0.5));
 	world.addStaticMesh("/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
 
 	console.log("Starting main loop.");
@@ -46,6 +49,11 @@ function main(currentFrameTime) {
 			}
 			break;
 		case "testScene":
+			world.setCurrentEntity(cube0);
+			world.addRotation(vec3.fromValues(0, time.getDeltaTime() * 30, 0));
+			world.setCurrentEntity(cube1);
+			world.addRotation(vec3.fromValues(0, time.getDeltaTime() * -180, 0));
+
 			cameraSystem.tick();
 			staticMeshRenderingSystem.tick();
 			break;
