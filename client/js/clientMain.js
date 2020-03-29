@@ -20,7 +20,7 @@ async function init() {
 	resourceManager.load("/assets/test/TestCube_BaseColor.png");
 
 	world.createEntity();
-	world.createEntity(vec3.fromValues(5,5,5));
+	world.createEntity(vec3.fromValues(3, 5, 3), vec3.fromValues(45, -45, 0));
 	world.addCamera();
 	world.createEntity();
 	world.addStaticMesh("/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
