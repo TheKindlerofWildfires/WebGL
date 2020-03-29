@@ -5,6 +5,7 @@ import * as mat4 from "/js/lib/glMatrix/mat4.js";
 import * as staticMeshRenderingSystem from "/js/systems/staticMeshRenderingSystem.js";
 import * as cameraSystem from "/js/systems/cameraSystem.js";
 
+import * as time from "/js/time.js";
 import * as shaderManager from "/js/shaderManager.js";
 import * as resourceManager from "/js/resourceManager.js";
 import * as world from "/js/world.js";
@@ -32,8 +33,7 @@ async function init() {
 }
 
 function main(currentFrameTime) {
-	let deltaTime = (currentFrameTime - lastFrameTime) / 1000;
-	lastFrameTime = currentFrameTime;
+	time.flow();
 
 	let gl = shaderManager.getWebglContext();
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
