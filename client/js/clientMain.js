@@ -2,11 +2,6 @@
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
 import * as mat4 from "/js/lib/glMatrix/mat4.js";
 
-import * as webglHelper from "/js/helpers/webglHelper.js";
-import * as shaderHelper from "/js/helpers/shaderHelper.js";
-import * as entityHelper from "/js/helpers/entityHelper.js";
-
-//import * as physicsSystem from "/js/systems/physicsSystem.js";
 import * as staticMeshRenderingSystem from "/js/systems/staticMeshRenderingSystem.js";
 import * as cameraSystem from "/js/systems/cameraSystem.js";
 
@@ -14,15 +9,12 @@ import * as shaderManager from "/js/shaderManager.js";
 import * as resourceManager from "/js/resourceManager.js";
 import * as world from "/js/world.js";
 
-let gl = null;
 let currentState = "init";
 let lastFrameTime = 0;
 
 init();
-
 async function init() {
 	await shaderManager.initWebgl();
-	gl = shaderManager.getWebglContext();
 
 	resourceManager.load("/assets/test/TestCube.obj");
 	resourceManager.load("/assets/test/TestCube_BaseColor.png");
@@ -43,6 +35,7 @@ function main(currentFrameTime) {
 	let deltaTime = (currentFrameTime - lastFrameTime) / 1000;
 	lastFrameTime = currentFrameTime;
 
+	let gl = shaderManager.getWebglContext();
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
