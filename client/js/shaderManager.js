@@ -28,7 +28,7 @@ export async function initWebgl() {
 	gl.cullFace(gl.BACK);
 
   let unlit = Object.create(Object.prototype);
-  unlit.program = await loadShader("shaders/unlit.vs", "shaders/unlit.fs");
+  unlit.program = await loadShader("/shaders/unlit.vs", "/shaders/unlit.fs");
   unlit.positionLocation = gl.getAttribLocation(unlit.program, "position");
   gl.enableVertexAttribArray(unlit.positionLocation);
   unlit.uvLocation = gl.getAttribLocation(unlit.program, "uv");
@@ -38,6 +38,20 @@ export async function initWebgl() {
   unlit.worldLocation = gl.getUniformLocation(unlit.program, "worldMatrix");
   unlit.baseColorLocation = gl.getUniformLocation(unlit.program, "baseColor");
   shaders.set("unlit", unlit);
+
+  let sprite = Object.create(Object.prototype);
+  sprite.program = await loadShader("shaders/sprite.vs", "shaders/sprite.fs");
+  sprite.positionLocation = gl.getAttribLocation(sprite.program, "position");
+  gl.enableVertexAttribArray(sprite.positionLocation);
+  sprite.uvLocation = gl.getAttribLocation(sprite.program, "uv");
+  gl.enableVertexAttribArray(sprite.uvLocation);
+  sprite.projectionLocation = gl.getUniformLocation(sprite.program, "projectionMatrix");
+  sprite.viewLocation = gl.getUniformLocation(sprite.program, "viewMatrix");
+  sprite.worldLocation = gl.getUniformLocation(sprite.program, "worldMatrix");
+  sprite.spriteSheetLocation = gl.getUniformLocation(sprite.program, "spriteSheet");
+  sprite.spriteSizeLocation = gl.getUniformLocation(sprite.program, "spriteSize");
+  sprite.spritePositionLocation = gl.getUniformLocation(sprite.program, "spritePosition");
+  shaders.set("sprite", sprite);
 
   console.log("Shaders OK!")
 }

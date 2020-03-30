@@ -75,6 +75,15 @@ export function addStaticMesh(mesh, baseColor) {
   activeEntity.staticMesh.baseColor = baseColor;
 }
 
+export function addSprite(spriteSheet, spriteWidth, spriteHeight, spriteX, spriteY) {
+  activeEntity.sprite = Object.create(Object.prototype);
+  activeEntity.sprite.spriteSheet = spriteSheet;
+  activeEntity.sprite.spriteWidth = spriteWidth;
+  activeEntity.sprite.spriteHeight = spriteHeight;
+  activeEntity.sprite.spriteX = spriteX;
+  activeEntity.sprite.spriteY = spriteY;
+}
+
 export function addCamera(fov, clipNear, clipFar) {
   activeEntity.camera = Object.create(Object.prototype);
   activeEntity.camera.isActive = true;

@@ -10,6 +10,7 @@ export function tick() {
   cameraObject.projectionMatrix = mat4.create();
   for(let currentEntity of world.getEntities()) {
     if ("camera" in currentEntity && currentEntity.camera.isActive) {
+      cameraObject.cameraRotation = currentEntity.transform.rotation;
       mat4.rotateX(cameraObject.viewMatrix, cameraObject.viewMatrix, currentEntity.transform.rotation[0] * Math.PI/180);
       mat4.rotateY(cameraObject.viewMatrix, cameraObject.viewMatrix, currentEntity.transform.rotation[1] * Math.PI/180);
       mat4.rotateZ(cameraObject.viewMatrix, cameraObject.viewMatrix, currentEntity.transform.rotation[2] * Math.PI/180);
@@ -17,7 +18,7 @@ export function tick() {
       let cameraPosition = vec3.create();
       vec3.subtract(cameraPosition, cameraPosition, currentEntity.transform.location)
       mat4.translate(cameraObject.viewMatrix, cameraObject.viewMatrix, cameraPosition);
-      
+
       mat4.perspective(cameraObject.projectionMatrix, currentEntity.camera.fov * Math.PI/180, currentEntity.camera.aspectRatio, currentEntity.camera.clipNear, currentEntity.camera.clipFar);
       return;
     }

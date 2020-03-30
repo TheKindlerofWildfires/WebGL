@@ -3,6 +3,7 @@ import * as vec3 from "/js/lib/glMatrix/vec3.js";
 import * as mat4 from "/js/lib/glMatrix/mat4.js";
 
 import * as staticMeshRenderingSystem from "/js/systems/staticMeshRenderingSystem.js";
+import * as spriteSystem from "/js/systems/spriteSystem.js";
 import * as cameraSystem from "/js/systems/cameraSystem.js";
 
 import * as time from "/js/time.js";
@@ -20,11 +21,17 @@ init();
 async function init() {
 	await shaderManager.initWebgl();
 
+	resourceManager.load("/assets/sprite.obj");
 	resourceManager.load("/assets/test/TestCube.obj");
 	resourceManager.load("/assets/test/TestCube_BaseColor.png");
 
-	world.createEntity();
-	world.createEntity(vec3.fromValues(3, 5, 3), vec3.fromValues(45, -45, 0));
+	world.createEntity(vec3.fromValues(2, 0, 0));
+	world.addSprite("/assets/test/TestCube_BaseColor.png", 1, 1, 0, 0);
+	world.createEntity(vec3.fromValues(3, 0, 0));
+	world.addSprite("/assets/test/TestCube_BaseColor.png", 2, 2, 1, 1);
+	world.createEntity(vec3.fromValues(4, 0, 0));
+	world.addSprite("/assets/test/TestCube_BaseColor.png", 2, 2, 0, 0);
+	world.createEntity(vec3.fromValues(0, 5, 5), vec3.fromValues(45, 0, 0));
 	world.addCamera();
 	cube0 = world.createEntity();
 	world.addStaticMesh("/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
@@ -56,6 +63,7 @@ function main(currentFrameTime) {
 
 			cameraSystem.tick();
 			staticMeshRenderingSystem.tick();
+			spriteSystem.tick();
 			break;
 	}
 
