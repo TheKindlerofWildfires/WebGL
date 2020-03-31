@@ -32,6 +32,7 @@ export function tick() {
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, baseColor.texture);
+      gl.uniform1i(unlit.baseColorLocation, 0);
 
       gl.drawArrays(gl.TRIANGLES, 0, mesh.polyCount);
     }

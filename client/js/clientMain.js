@@ -2,10 +2,6 @@
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
 import * as mat4 from "/js/lib/glMatrix/mat4.js";
 
-import * as staticMeshRenderingSystem from "/js/systems/staticMeshRenderingSystem.js";
-import * as spriteSystem from "/js/systems/spriteSystem.js";
-import * as cameraSystem from "/js/systems/cameraSystem.js";
-
 import * as time from "/js/time.js";
 import * as shaderManager from "/js/shaderManager.js";
 import * as resourceManager from "/js/resourceManager.js";
@@ -61,9 +57,7 @@ function main(currentFrameTime) {
 			world.setCurrentEntity(cube1);
 			world.addRotation(vec3.fromValues(0, time.getDeltaTime() * -180, 0));
 
-			cameraSystem.tick();
-			staticMeshRenderingSystem.tick();
-			spriteSystem.tick();
+			world.tick();
 			break;
 	}
 

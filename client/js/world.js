@@ -2,10 +2,20 @@
 import {v4 as uuidv4} from "/js/lib/uuidjs/index.js";
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
 
+import * as staticMeshSystem from "/js/systems/staticMeshSystem.js";
+import * as spriteSystem from "/js/systems/spriteSystem.js";
+import * as cameraSystem from "/js/systems/cameraSystem.js";
+
 let entityMap = new Map();
 let activeEntity = null;
 
 let activeCamera = Object.create(Object.prototype);
+
+export function tick() {
+  cameraSystem.tick();
+  staticMeshSystem.tick();
+  spriteSystem.tick();
+}
 
 export function createEntity(location, rotation, scale) {
   activeEntity = Object.create(Object.prototype);
