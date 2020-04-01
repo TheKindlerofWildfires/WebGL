@@ -64,6 +64,10 @@ export function getGameCanvas() {
   return gameCanvas;
 }
 
+export function getAspectRatio() {
+  return gameCanvas.clientWidth / gameCanvas.clientHeight;
+}
+
 export function getShader(key) {
   return shaders.get(key);
 }
