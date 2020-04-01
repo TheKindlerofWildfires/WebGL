@@ -94,21 +94,11 @@ export function addSprite(spriteSheet, spriteWidth, spriteHeight, spriteX, sprit
   activeEntity.sprite.spriteY = spriteY;
 }
 
-export function addCamera(fov, clipNear, clipFar) {
+export function addCamera(fov = 60, clipNear = 0.01, clipFar = 30) {
   activeEntity.camera = Object.create(Object.prototype);
   activeEntity.camera.isActive = true;
-  if (fov == undefined) {
-    fov = 90;
-  }
   activeEntity.camera.fov = fov;
-  activeEntity.camera.aspectRatio = 1.77777;
-  if (clipNear == undefined) {
-    clipNear = 0.1;
-  }
   activeEntity.camera.clipNear = clipNear;
-  if(clipFar == undefined) {
-    clipFar = 10;
-  }
   activeEntity.camera.clipFar = clipFar;
 }
 
