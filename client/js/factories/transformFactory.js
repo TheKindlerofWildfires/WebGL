@@ -3,6 +3,7 @@ import * as vec3 from "/js/lib/glMatrix/vec3.js";
 
 export function createTransform(location = vec3.create(), rotation = vec3.create(), scale = vec3.fromValues(1, 1, 1)) {
   let transform = Object.create(Object.prototype);
+  transform.type = "transform";
   transform.location = location;
   transform.rotation = rotation;
   transform.scale = scale;
