@@ -57,8 +57,8 @@ function main(currentFrameTime) {
       world.setCurrentEntity(pawn);
 			//Move commands
 			let speed = 5* time.getDeltaTime();
-			let sensitivity = 50* time.getDeltaTime();
-			//A lot like vy, vx from previous
+			let sensitivity = 1*180/Math.PI* time.getDeltaTime();
+			//A lot like vy, vx from previous (Update to 3D)
 			let target = {
 				x: Math.sin(world.getRotation()[1]*Math.PI/180),
 				y: Math.cos(world.getRotation()[1]*Math.PI/180)
@@ -71,16 +71,24 @@ function main(currentFrameTime) {
 				-xPlane*target.x*speed-yPlane*target.y*speed
 			));
 			//Look at commands
-			let screenSize = shaderManager.getClientScreenSize()
-			//Set the delta based on mouse location
+			//Set the delta based on mouse location (Goes -pi/2 to pi/2)
 			let delta = {
-				x: inputManager.getMouseLocation().x-0.5,
-				y: inputManager.getMouseLocation().y-0.5
+				x: (inputManager.getMouseLocation().x-0.5)*Math.PI,
+				y: (inputManager.getMouseLocation().y-0.5)*Math.PI
 			}
-			//If we are looking side to side lets move for the time being only
-			//Lets super scale that!
-			delta.x = Math.exp(Math.abs(delta.x))/Math.exp(0.5)*delta.x;
-			world.addRotation(vec3.fromValues(0, delta.x*sensitivity, 0))
+			target.x = target.x+Math.cos(delta.x)*Math.cos(delta.y);
+			target.y = target.y+Math.sin(delta.x)*Math.cos(delta.y)
+			//Math.cos(delta.x)*Math.cos(delta.y)*sensitivity,
+			//Math.sin(delta.x)*Math.cos(delta.y)*sensitivity,
+			//Math.sin(delta.y)*sensitivity
+			world.addRotation(vec3.fromValues(
+				0,
+				Math.sin(delta.x)*Math.cos(delta.y)*sensitivity,
+				0
+			))
+
+			//Want to take delta on the screen and change that to varitation in x,y,z
+
 
 			world.tick();
 			break;
