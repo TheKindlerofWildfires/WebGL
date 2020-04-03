@@ -48,7 +48,7 @@ export function setLocation(newLocation) {
 }
 
 export function getLocation() {
-  return selectEntity.transform.location;
+  return activeEntity.transform.location;
 }
 
 export function addLocation(addVector) {

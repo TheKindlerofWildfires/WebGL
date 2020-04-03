@@ -46,7 +46,7 @@ function main(currentFrameTime) {
 	let gl = shaderManager.getWebglContext();
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-	
+
 	switch (currentState) {
 		case "init":
 			if (resourceManager.checkReady()) {
@@ -55,8 +55,25 @@ function main(currentFrameTime) {
 			break;
 		case "testScene":
       world.setCurrentEntity(pawn);
-			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("KeyA") * time.getDeltaTime() * 30, 0))
-			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("KeyD") * time.getDeltaTime() * -30, 0))
+			//Move commands
+			let speed = 0.05;
+			//A lot like vy, vx from previous
+			let target = {
+				x: Math.sin(world.getRotation()[1]*Math.PI/180),
+				y: Math.cos(world.getRotation()[1]*Math.PI/180)
+			}
+			let xPlane = inputManager.getKeyState("KeyA")-inputManager.getKeyState("KeyD");
+			let yPlane = inputManager.getKeyState("KeyW")-inputManager.getKeyState("KeyS");
+      world.addLocation(vec3.fromValues(
+				-xPlane*target.y*speed+yPlane*target.x*speed,
+				0,
+				-xPlane*target.x*speed-yPlane*target.y*speed
+			));
+			console.log(world.getRotation()[1]);
+
+			//Look at commands
+			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("MouseLeft") * time.getDeltaTime() * 30, 0))
+			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("MouseRight") * time.getDeltaTime() * -30, 0))
 
 			world.tick();
 			break;
