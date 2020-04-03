@@ -7,6 +7,7 @@ import * as shaderManager from "/js/shaderManager.js";
 import * as inputManager from "/js/inputManager.js";
 import * as resourceManager from "/js/resourceManager.js";
 import * as world from "/js/world.js";
+import * as pawnController from "/js/pawnController.js";
 
 let currentState = "init";
 
@@ -55,41 +56,15 @@ function main(currentFrameTime) {
 			break;
 		case "testScene":
       world.setCurrentEntity(pawn);
-			//Move commands
-			let speed = 5* time.getDeltaTime();
-			let sensitivity = 1*180/Math.PI* time.getDeltaTime();
-			//A lot like vy, vx from previous (Update to 3D)
-			let target = {
-				x: Math.sin(world.getRotation()[1]*Math.PI/180),
-				y: Math.cos(world.getRotation()[1]*Math.PI/180)
+			let movement = {
+				w: inputManager.getKeyState("KeyW"),
+				a: inputManager.getKeyState("KeyA"),
+				s: inputManager.getKeyState("KeyS"),
+				d: inputManager.getKeyState("KeyD")
 			}
-			let xPlane = inputManager.getKeyState("KeyA")-inputManager.getKeyState("KeyD");
-			let yPlane = inputManager.getKeyState("KeyW")-inputManager.getKeyState("KeyS");
-      world.addLocation(vec3.fromValues(
-				-xPlane*target.y*speed+yPlane*target.x*speed,
-				0,
-				-xPlane*target.x*speed-yPlane*target.y*speed
-			));
-			//Look at commands
-			//Set the delta based on mouse location (Goes -pi/2 to pi/2)
-			let delta = {
-				x: (inputManager.getMouseLocation().x-0.5)*Math.PI,
-				y: (inputManager.getMouseLocation().y-0.5)*Math.PI
-			}
-			target.x = target.x+Math.cos(delta.x)*Math.cos(delta.y);
-			target.y = target.y+Math.sin(delta.x)*Math.cos(delta.y)
-			//Math.cos(delta.x)*Math.cos(delta.y)*sensitivity,
-			//Math.sin(delta.x)*Math.cos(delta.y)*sensitivity,
-			//Math.sin(delta.y)*sensitivity
-			world.addRotation(vec3.fromValues(
-				0,
-				Math.sin(delta.x)*Math.cos(delta.y)*sensitivity,
-				0
-			))
-
-			//Want to take delta on the screen and change that to varitation in x,y,z
-
-
+			pawnController.update(world.getRotation(), movement, inputManager.getMouseLocation(), time.getDeltaTime());
+			world.addLocation(pawnController.getTickLocation());
+			world.addRotation(pawnController.getTickRotation());
 			world.tick();
 			break;
 	}
