@@ -56,7 +56,8 @@ function main(currentFrameTime) {
 		case "testScene":
       world.setCurrentEntity(pawn);
 			//Move commands
-			let speed = 0.05;
+			let speed = 5* time.getDeltaTime();
+			let sensitivity = 50* time.getDeltaTime();
 			//A lot like vy, vx from previous
 			let target = {
 				x: Math.sin(world.getRotation()[1]*Math.PI/180),
@@ -69,11 +70,17 @@ function main(currentFrameTime) {
 				0,
 				-xPlane*target.x*speed-yPlane*target.y*speed
 			));
-			console.log(world.getRotation()[1]);
-
 			//Look at commands
-			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("MouseLeft") * time.getDeltaTime() * 30, 0))
-			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("MouseRight") * time.getDeltaTime() * -30, 0))
+			let screenSize = shaderManager.getClientScreenSize()
+			//Set the delta based on mouse location
+			let delta = {
+				x: inputManager.getMouseLocation().x-0.5,
+				y: inputManager.getMouseLocation().y-0.5
+			}
+			//If we are looking side to side lets move for the time being only
+			//Lets super scale that!
+			delta.x = Math.exp(Math.abs(delta.x))/Math.exp(0.5)*delta.x;
+			world.addRotation(vec3.fromValues(0, delta.x*sensitivity, 0))
 
 			world.tick();
 			break;
