@@ -2,6 +2,7 @@
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
 import * as mat4 from "/js/lib/glMatrix/mat4.js";
 
+import * as shaderManager from "/js/shaderManager.js";
 import * as world from "/js/world.js";
 
 export function tick() {
@@ -19,7 +20,7 @@ export function tick() {
       vec3.subtract(cameraPosition, cameraPosition, currentEntity.transform.location)
       mat4.translate(cameraObject.viewMatrix, cameraObject.viewMatrix, cameraPosition);
 
-      mat4.perspective(cameraObject.projectionMatrix, currentEntity.camera.fov * Math.PI/180, currentEntity.camera.aspectRatio, currentEntity.camera.clipNear, currentEntity.camera.clipFar);
+      mat4.perspective(cameraObject.projectionMatrix, currentEntity.camera.fov * Math.PI/180, shaderManager.getAspectRatio(), currentEntity.camera.clipNear, currentEntity.camera.clipFar);
       return;
     }
   }

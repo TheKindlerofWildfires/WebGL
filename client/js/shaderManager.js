@@ -64,6 +64,18 @@ export function getGameCanvas() {
   return gameCanvas;
 }
 
+export function getAspectRatio() {
+  return gameCanvas.clientWidth / gameCanvas.clientHeight;
+}
+
+export function getClientScreenSize() {
+  let screenSize = Object.create(Object.prototype);
+  screenSize.width = gameCanvas.clientWidth;
+  screenSize.height = gameCanvas.clientHeight;
+
+  return screenSize;
+}
+
 export function getShader(key) {
   return shaders.get(key);
 }

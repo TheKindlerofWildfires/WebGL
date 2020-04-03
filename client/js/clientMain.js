@@ -4,12 +4,11 @@ import * as mat4 from "/js/lib/glMatrix/mat4.js";
 
 import * as time from "/js/time.js";
 import * as shaderManager from "/js/shaderManager.js";
+import * as inputManager from "/js/inputManager.js";
 import * as resourceManager from "/js/resourceManager.js";
 import * as world from "/js/world.js";
-import * as inputSystem from "/js/systems/inputSystem.js";
 
 let currentState = "init";
-let lastFrameTime = 0;
 
 let cube0 = null;
 let cube1 = null;
@@ -18,7 +17,8 @@ let pawn = null;
 init();
 async function init() {
 	await shaderManager.initWebgl();
-  inputSystem.initInput(shaderManager.getGameCanvas());
+	inputManager.initInput();
+
 	resourceManager.load("/assets/sprite.obj");
 	resourceManager.load("/assets/test/TestCube.obj");
 	resourceManager.load("/assets/test/TestCube_BaseColor.png");
@@ -46,7 +46,7 @@ function main(currentFrameTime) {
 	let gl = shaderManager.getWebglContext();
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  let down = inputSystem.getMouseState();
+	
 	switch (currentState) {
 		case "init":
 			if (resourceManager.checkReady()) {
@@ -54,14 +54,11 @@ function main(currentFrameTime) {
 			}
 			break;
 		case "testScene":
-			world.setCurrentEntity(cube0);
-			//world.addRotation(vec3.fromValues(0, time.getDeltaTime() * 30, 0));
-			world.setCurrentEntity(cube1);
-			//world.addRotation(vec3.fromValues(0, time.getDeltaTime() * -180, 0));
       world.setCurrentEntity(pawn);
-			world.addRotation(vec3.fromValues(0, down*time.getDeltaTime()*30, 0))
+			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("KeyA") * time.getDeltaTime() * 30, 0))
+			world.addRotation(vec3.fromValues(0, inputManager.getKeyState("KeyD") * time.getDeltaTime() * -30, 0))
+
 			world.tick();
-			down = inputSystem.getMouseState();
 			break;
 	}
 
