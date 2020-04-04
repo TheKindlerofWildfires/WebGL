@@ -7,7 +7,6 @@ function createComponent(location, rotation, scale) {
   let component = Object.create(Object.prototype);
   component.type = "component";
   component.id = uuidv4();
-  //component.parentId = LARGE TODO
   component.transform = transformFactory.create(location, rotation, scale);
 
   return component;
