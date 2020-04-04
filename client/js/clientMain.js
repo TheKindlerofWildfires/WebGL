@@ -8,6 +8,7 @@ import * as inputManager from "/js/inputManager.js";
 import * as resourceManager from "/js/resourceManager.js";
 import * as world from "/js/world.js";
 import * as pawnController from "/js/pawnController.js";
+import * as marching from "/js/generation/marching.js";
 
 let currentState = "init";
 
@@ -47,7 +48,7 @@ function main(currentFrameTime) {
 	let gl = shaderManager.getWebglContext();
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
+	let a = 0;
 	switch (currentState) {
 		case "init":
 			if (resourceManager.checkReady("required")) {
@@ -66,7 +67,14 @@ function main(currentFrameTime) {
 			world.addLocation(pawnController.getTickLocation());
 			world.addRotation(pawnController.getTickRotation());
 			world.tick();
+			a = marching.mapArea(vec3.fromValues(-1,-1,-1), vec3.fromValues(1,1,1), 0.5, 0);
+			//console.log(a);
+			//currentState = 'done';
 			break;
+		case "done":
+
+			break;
+
 	}
 
 	requestAnimationFrame(main);
