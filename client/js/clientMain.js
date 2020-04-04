@@ -20,9 +20,9 @@ async function init() {
 	await shaderManager.initWebgl();
 	inputManager.initInput();
 
-	resourceManager.load("/assets/sprite.obj");
-	resourceManager.load("/assets/test/TestCube.obj");
-	resourceManager.load("/assets/test/TestCube_BaseColor.png");
+	resourceManager.load("/assets/sprite.obj", "required");
+	resourceManager.load("/assets/test/TestCube.obj", "required");
+	resourceManager.load("/assets/test/TestCube_BaseColor.png", "required");
 
 	world.createEntity(vec3.fromValues(2, 0, 0));
 	world.addSprite("/assets/test/TestCube_BaseColor.png", 1, 1, 0, 0);
@@ -50,7 +50,7 @@ function main(currentFrameTime) {
 
 	switch (currentState) {
 		case "init":
-			if (resourceManager.checkReady()) {
+			if (resourceManager.checkReady("required")) {
 				currentState = "testScene";
 			}
 			break;
