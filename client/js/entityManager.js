@@ -10,7 +10,7 @@ export function createEntity() {
   entity.type = "entity";
   entity.id = uuidv4();
   entity.transform = transformFactory.createTransform(location, rotation, scale);
-  entity.flags = [];
+  entity.flags = new Set();
   entity.components = [];
 
   entityMap.set(entity.id, entity);
@@ -37,6 +37,21 @@ function getComponents(id, componentType) {
     }
   }
   return componentArray;
+}
+
+export function hasFlag(id, flag) {
+  let entity = entityMap.get(id);
+  return entity.flags.has(flag);
+}
+
+export function setFlag(id, flag) {
+  let entity = entityMap.get(id);
+  entity.flags.add(flag);
+}
+
+export function removeFlag(id, flag) {
+  let entity = entityMap.get(id);
+  entity.flags.delete(flag);
 }
 
 export function getLocation(id) {
