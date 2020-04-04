@@ -9,18 +9,14 @@ let resourceMap = new Map();
 export async function load(url, group) {
   if (resourceMap.has(url)) {
     let resource = resourceMap.get(url);
-    if (resource.groups.includes(group)) {
-      return;
-    }
-
-    resource.groups.push(group);
+    resource.groups.add(group);
     return;
   }
   let resource = Object.create(Object.prototype);
   resourceMap.set(url, resource);
   resource.isReady = false;
-  resource.groups = [];
-  resource.groups.push(group);
+  resource.groups = new Set();
+  resource.groups.add(group);
 
   let gl = shaderManager.getWebglContext();
 
@@ -57,7 +53,7 @@ export function getResource(url) {
 
 export function checkReady(group) {
   for (let resource of resourceMap.values()) {
-    if (resource.groups.includes(group) && !resource.isReady) {
+    if (resource.groups.has(group) && !resource.isReady) {
       return false;
     }
   }
