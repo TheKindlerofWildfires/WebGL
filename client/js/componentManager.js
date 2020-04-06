@@ -16,6 +16,10 @@ function createComponent() {
   return component;
 }
 
+export function getComponent(componentId) {
+  return componentMap.get(componentId);
+}
+
 export function createStaticMeshComponent(meshResource, baseColorResource) {
   let component = createComponent();
   component.type = "staticMeshComponent";

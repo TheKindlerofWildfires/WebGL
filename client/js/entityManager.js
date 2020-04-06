@@ -2,6 +2,7 @@
 import {v4 as uuidv4} from "/js/lib/uuidjs/index.js";
 
 import * as transformFactory from "/js/factories/transformFactory.js";
+import * as componentManager from "/js/componentManager.js";
 
 let entityMap = new Map();
 
@@ -17,10 +18,12 @@ export function createEntity() {
   return entity.id;
 }
 
-export function addComponent(id, newComponent) {
-  let entity = entityMap.get(id);
-  newComponent.parentId = id;
-  entity.components.push(newComponent);
+export function addComponent(entityId, componentId) {
+  let entity = entityMap.get(entityId);
+  let component = componentManager.getComponent(componentId);
+
+  component.parrent = entityId;
+  entity.components.push(component);
 }
 
 function getComponents(id, componentType) {
