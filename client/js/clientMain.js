@@ -9,6 +9,7 @@ import * as resourceManager from "/js/resourceManager.js";
 import * as world from "/js/world.js";
 import * as pawnController from "/js/pawnController.js";
 import * as marching from "/js/generation/marching.js";
+import * as vertexRenderer from "/js/generation/vertexRenderer.js";
 
 let currentState = "init";
 
@@ -38,6 +39,9 @@ async function init() {
 	cube1 = world.createEntity(vec3.fromValues(0,-2,0), vec3.fromValues(0, -180, 90), vec3.fromValues(5, 1, 10));
 	world.addStaticMesh("/assets/test/TestCube.obj", "/assets/test/TestCube_BaseColor.png");
 
+
+	let a = marching.mapArea(vec3.fromValues(-1,-1,-1), vec3.fromValues(1,1,1), 0.5, 0);
+	vertexRenderer.setTerrain(a.verts, vec3.fromValues(1,0,0), a.n);
 	console.log("Starting main loop.");
 	requestAnimationFrame(main);
 }
@@ -67,8 +71,6 @@ function main(currentFrameTime) {
 			world.addLocation(pawnController.getTickLocation());
 			world.addRotation(pawnController.getTickRotation());
 			world.tick();
-			a = marching.mapArea(vec3.fromValues(-1,-1,-1), vec3.fromValues(1,1,1), 0.5, 0);
-			//console.log(a);
 			//currentState = 'done';
 			break;
 		case "done":

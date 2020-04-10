@@ -5,6 +5,7 @@ import * as vec3 from "/js/lib/glMatrix/vec3.js";
 import * as staticMeshSystem from "/js/systems/staticMeshSystem.js";
 import * as spriteSystem from "/js/systems/spriteSystem.js";
 import * as cameraSystem from "/js/systems/cameraSystem.js";
+import * as vertexRenderer from "/js/generation/vertexRenderer.js";
 
 let entityMap = new Map();
 let activeEntity = null;
@@ -15,6 +16,7 @@ export function tick() {
   cameraSystem.tick();
   staticMeshSystem.tick();
   spriteSystem.tick();
+  //vertexRenderer.tick();
 }
 
 export function createEntity(location, rotation, scale) {
