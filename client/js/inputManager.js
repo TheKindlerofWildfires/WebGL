@@ -6,6 +6,12 @@ let mouseLocation = {
   x:0,
   y:0,
 };
+let mouseDelta = {
+  x:1,
+  y:1,
+};
+let timeout1 = 0;
+let timeout2 = 0;
 
 export function initInput() {
   let gameCanvas = shaderManager.getGameCanvas();
@@ -26,6 +32,10 @@ export function getKeyState(keyCode) {
 
 export function getMouseLocation() {
   return mouseLocation;
+}
+
+export function getMouseDelta() {
+  return mouseDelta;
 }
 
 function onKeyDown(keyEvent) {
@@ -68,4 +78,16 @@ function onMouseMove(mouseEvent) {
   let screenSize = shaderManager.getClientScreenSize();
   mouseLocation.x = mouseEvent.x / screenSize.width;
   mouseLocation.y = mouseEvent.y / screenSize.height;
+  mouseDelta.x = 1;
+  mouseDelta.y = 1;
+  clearTimeout(timeout1);
+  clearTimeout(timeout2);
+  timeout1 = setTimeout(function(){
+    mouseDelta.x = 0.5; mouseDelta.y = 0.5;
+    ;}, 500);
+  timeout2 = setTimeout(function(){
+    mouseDelta.x = 0; mouseDelta.y = 0;
+    ;}, 2000);
+
+
 }

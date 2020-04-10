@@ -63,7 +63,7 @@ function main(currentFrameTime) {
 				s: inputManager.getKeyState("KeyS"),
 				d: inputManager.getKeyState("KeyD")
 			}
-			pawnController.update(world.getRotation(), movement, inputManager.getMouseLocation(), time.getDeltaTime());
+			pawnController.update(world.getRotation(), movement, inputManager.getMouseDelta(),inputManager.getMouseLocation(), time.getDeltaTime());
 			world.addLocation(pawnController.getTickLocation());
 			world.addRotation(pawnController.getTickRotation());
 			world.tick();

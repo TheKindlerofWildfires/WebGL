@@ -9,7 +9,7 @@ let tickRotation = vec3.fromValues(0,0,0);
 //Math.cos(delta.x)*Math.cos(delta.y)*sensitivity,
 //Math.sin(delta.x)*Math.cos(delta.y)*sensitivity,
 //Math.sin(delta.y)*sensitivity
-export function update(pawnRotation, keys, mouseCoords, scale){
+export function update(pawnRotation, keys, mouseDelta, mouseLocation,scale){
     let target = {
 			x: Math.sin(pawnRotation[1]*Math.PI/180),
 			y: Math.cos(pawnRotation[1]*Math.PI/180)
@@ -23,10 +23,16 @@ export function update(pawnRotation, keys, mouseCoords, scale){
 		);
 		//Look at commands
 		//Set the delta based on mouse location (Goes -pi/2 to pi/2)
-		let delta = {
-			x: (mouseCoords.x-0.5)*Math.PI,
-			y: (mouseCoords.y-0.5)*Math.PI
-		}
+    //console.log(mouseDelta)
+    //If the mouse delta and location are in the same direction this should be large, if oposite should be small
+		/*let delta = {
+			x: mouseDelta.x*Math.abs((mouseDelta.x+mouseLocation.x-0.5)^2),
+			y: mouseDelta.y*Math.abs((mouseDelta.y+mouseLocation.y-0.5)^2)
+		}*/
+    let delta = {
+      x: (mouseLocation.x-0.5)*mouseDelta.x,
+      y: (mouseLocation.y-0.5)*mouseDelta.y
+    }
 		target.x = target.x+Math.cos(delta.x)*Math.cos(delta.y);
 		target.y = target.y+Math.sin(delta.x)*Math.cos(delta.y);
 		tickRotation = vec3.fromValues(
