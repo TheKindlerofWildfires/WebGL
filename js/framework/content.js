@@ -15,14 +15,15 @@ export async function loadTexture(groupId, assetLocation, SRGB = true) {
   let textureResource = Object.create(Object.prototype);
   textureResource.type = "textureResource";
   textureResource.isReady = false;
-  textureResource.groups = [groupId];
+  textureResource.groups = new Set();
+  textureResource.groups.add(groupId);
   contentMap.set(assetLocation, textureResource);
 
   textureResource.asset = await pngLoader.load(assetLocation);
   textureResource.isReady = true;
 }
 
-export function loadMesh(groupId, assetLocation) {
+export async function loadMesh(groupId, assetLocation) {
   if (contentMap.has(assetLocation)) {
     let meshResource = contentMap.get(assetLocation);
     meshResource.groups.add(groupId);
@@ -31,7 +32,8 @@ export function loadMesh(groupId, assetLocation) {
   let meshResource = Object.create(Object.prototype);
   meshResource.type = "meshResource";
   meshResource.isReady = false;
-  meshResource.groups = [groupId];
+  meshResource.groups = new Set();
+  meshResource.groups.add(groupId);
   contentMap.set(assetLocation, meshResource);
 
   meshResource.asset = await objLoader.load(assetLocation);

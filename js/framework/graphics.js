@@ -1,8 +1,18 @@
 "use strict";
+import * as mat4 from "/js/lib/glMatrix/mat4.js";
+import * as vec3 from "/js/lib/glMatrix/vec3.js";
 
 let gameCanvas = null;
 let gl = null;
+
 let shaders = new Map();
+
+let camera = Object.create(Object.prototype);
+camera.location = vec3.create();
+camera.rotation = vec3.create();
+camera.viewMatrix = mat4.create();
+camera.projectionMatrix = mat4.create();
+mat4.perspective(camera.projectionMatrix, 90 * Math.PI/180, 640 / 480, 0.01, 100);
 
 export async function init() {
   gameCanvas = document.getElementById("gameCanvas");
@@ -35,6 +45,64 @@ export function getCanvas() {
 
 export function getContext() {
   return gl;
+}
+
+export function setCameraLocation(location) {
+  camera.location = location;
+  updateCamera();
+}
+
+export function setCameraRotation(roation) {
+  camera.rotation = rotation;
+  updateCamera();
+}
+
+function updateCamera() {
+  camera.viewMatrix = mat4.create();
+  mat4.rotateX(camera.viewMatrix, camera.viewMatrix, camera.rotation[0] * Math.PI/180);
+  mat4.rotateY(camera.viewMatrix, camera.viewMatrix, camera.rotation[1] * Math.PI/180);
+  mat4.rotateZ(camera.viewMatrix, camera.viewMatrix, camera.rotation[2] * Math.PI/180);
+
+  let cameraPosition = vec3.create();
+  vec3.subtract(cameraPosition, cameraPosition, camera.location);
+  mat4.translate(camera.viewMatrix, camera.viewMatrix, cameraPosition);
+}
+
+export function clear() {
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+}
+
+export function present() {
+  //Buffers not yet implemented
+}
+
+export function drawUnlit(mesh, texture, transform) {
+  let worldMatrix = mat4.create();
+  mat4.scale(worldMatrix, worldMatrix, transform.scale);
+  mat4.translate(worldMatrix, worldMatrix, transform.location);
+  mat4.rotateX(worldMatrix, worldMatrix, transform.rotation[0] * Math.PI/180);
+  mat4.rotateY(worldMatrix, worldMatrix, transform.rotation[1] * Math.PI/180);
+  mat4.rotateZ(worldMatrix, worldMatrix, transform.rotation[2] * Math.PI/180);
+
+  let unlit = shaders.get("unlit");
+  gl.useProgram(unlit.program);
+  gl.uniformMatrix4fv(unlit.worldLocation, false, worldMatrix);
+  gl.uniformMatrix4fv(unlit.viewLocation, false, camera.viewMatrix);
+  gl.uniformMatrix4fv(unlit.projectionLocation, false, camera.projectionMatrix);
+  gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuffer);
+  gl.vertexAttribPointer(unlit.positionLocation, 3, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, mesh.uvBuffer);
+  gl.vertexAttribPointer(unlit.uvLocation, 2, gl.FLOAT, false, 0, 0);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D, texture.texture);
+  gl.uniform1i(unlit.baseColorLocation, 0);
+
+  gl.drawArrays(gl.TRIANGLES, 0, mesh.polyCount);
+}
+
+export function drawHud(texture, todo) {
+
 }
 
 async function loadShader(vertexShaderUrl, fragmentShaderUrl) {
