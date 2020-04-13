@@ -1,6 +1,7 @@
 "use strict";
+import * as graphics from "/js/framework/graphics.js";
 
-export async function loadOBJ(urlOBJ) {
+export async function load(urlOBJ) {
   console.log("Loading mesh: " + urlOBJ);
   let objResponse = await fetch(urlOBJ);
   let objText = await objResponse.text();
@@ -53,10 +54,24 @@ export async function loadOBJ(urlOBJ) {
     }
   }
 
-  parsedObj.polyCount = positionArray.length / 3;
-  parsedObj.positionArray = positionArray;
-  parsedObj.uvArray = uvArray;
-  parsedObj.normalArray = normalArray;
+  //parsedObj.polyCount = positionArray.length / 3;
+  //parsedObj.positionArray = positionArray;
+  //parsedObj.uvArray = uvArray;
+  //parsedObj.normalArray = normalArray;
 
-  return parsedObj;
+  let mesh = Object.create(Object.prototype);
+  mesh.type = "mesh";
+  mesh.polyCount = positionArray.length / 3;
+  let gl = graphics.getContext();
+  mesh.positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positionArray), gl.STATIC_DRAW);
+  mesh.uvBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, mesh.uvBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvArray), gl.STATIC_DRAW);
+  mesh.normalBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normalBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalArray), gl.STATIC_DRAW);
+
+  return mesh;
 }
