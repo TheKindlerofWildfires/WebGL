@@ -23,11 +23,8 @@ function main() {
     let baseColor = content.getAsset("/assets/test/TestCube_BaseColor.png");
     let mesh = content.getAsset("/assets/test/TestCube.obj");
 
-    let transform = Object.create(Object.prototype);
-    transform.location = vec3.fromValues(0,0,-5);
-    transform.rotation = vec3.fromValues(50,160,0);
-    transform.scale = vec3.fromValues(1,1,1);
-    graphics.drawUnlit(mesh, baseColor, transform);
+    graphics.drawUnlit(mesh, baseColor, vec3.fromValues(0,0,-5), vec3.fromValues(0,-45,0));
+    graphics.drawUnlit(mesh, baseColor, vec3.fromValues(3,0,-5))
   }
 
   requestAnimationFrame(main);

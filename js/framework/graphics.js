@@ -77,13 +77,13 @@ export function present() {
   //Buffers not yet implemented
 }
 
-export function drawUnlit(mesh, texture, transform) {
+export function drawUnlit(mesh, texture, location = vec3.fromValues(0,0,0), rotation = vec3.fromValues(0,0,0), scale = vec3.fromValues(1,1,1)) {
   let worldMatrix = mat4.create();
-  mat4.scale(worldMatrix, worldMatrix, transform.scale);
-  mat4.translate(worldMatrix, worldMatrix, transform.location);
-  mat4.rotateX(worldMatrix, worldMatrix, transform.rotation[0] * Math.PI/180);
-  mat4.rotateY(worldMatrix, worldMatrix, transform.rotation[1] * Math.PI/180);
-  mat4.rotateZ(worldMatrix, worldMatrix, transform.rotation[2] * Math.PI/180);
+  mat4.scale(worldMatrix, worldMatrix, scale);
+  mat4.translate(worldMatrix, worldMatrix, location);
+  mat4.rotateX(worldMatrix, worldMatrix, rotation[0] * Math.PI/180);
+  mat4.rotateY(worldMatrix, worldMatrix, rotation[1] * Math.PI/180);
+  mat4.rotateZ(worldMatrix, worldMatrix, rotation[2] * Math.PI/180);
 
   let unlit = shaders.get("unlit");
   gl.useProgram(unlit.program);
