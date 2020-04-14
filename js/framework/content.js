@@ -40,6 +40,23 @@ export async function loadMesh(groupId, assetLocation) {
   meshResource.isReady = true;
 }
 
+export async function loadAudio(groupId, assetLocation) {
+  if (contentMap.has(assetLocation)) {
+    let meshResource = contentMap.get(assetLocation);
+    meshResource.groups.add(groupId);
+    return;
+  }
+  let audioResource = Object.create(Object.prototype);
+  audioResource.type = "audioResource";
+  audioResource.isReady = false;
+  audioResource.groups = new Set();
+  audioResource.groups.add(groupId);
+  contentMap.set(assetLocation, audioResource);
+
+  audioResource.asset = await mp3Loader.load(assetLocation);
+  audioResource.isReady = true;
+}
+
 export function getAsset(assetLocation) {
   return contentMap.get(assetLocation).asset;
 }
