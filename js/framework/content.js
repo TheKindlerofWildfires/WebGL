@@ -58,7 +58,16 @@ export async function loadAudio(groupId, assetLocation) {
 }
 
 export function getAsset(assetLocation) {
-  return contentMap.get(assetLocation).asset;
+  if (!contentMap.has(assetLocation)) {
+    console.error(assetLocation + " : Not requested.");
+    return;
+  }
+  let resource = contentMap.get(assetLocation);
+  if (resource.isReady) {
+    return resource.asset;
+  }
+  console.error("Error: " + assetLocation + " not yet loaded.");
+  return;
 }
 
 export function checkGroup(groupId) {
