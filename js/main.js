@@ -24,8 +24,8 @@ function main() {
     let mesh = content.getAsset("/assets/test/TestCube.obj");
 
     graphics.drawUnlit(mesh, baseColor, vec3.fromValues(0,0,-5), vec3.fromValues(0,-45,0));
-    graphics.drawUnlit(mesh, baseColor, vec3.fromValues(3,0,-5))
+    graphics.drawUnlit(mesh, baseColor, vec3.fromValues(3,0,-5));
   }
-
+  
   requestAnimationFrame(main);
 }

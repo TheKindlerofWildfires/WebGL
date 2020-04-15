@@ -5,6 +5,15 @@ import * as vec3 from "/js/lib/glMatrix/vec3.js";
 let gameCanvas = null;
 let gl = null;
 
+const bufferWidth = 1280;
+const bufferHeight = 720;
+let sceneBuffer = null;
+let sceneDepth = null;
+let sceneTexture = null;
+let hudBuffer = null;
+let hudDepth = null;
+let hudTexture = null;
+
 let shaders = new Map();
 
 let camera = Object.create(Object.prototype);
@@ -26,6 +35,38 @@ export async function init() {
 	gl.cullFace(gl.BACK);
   console.log("Acquired webgl context successfully!");
 
+  //2d hud layer
+  sceneTexture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, sceneTexture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, bufferWidth, bufferHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  sceneDepth = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, sceneDepth);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT16, bufferWidth, bufferHeight, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  sceneBuffer = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, sceneBuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, sceneTexture, 0);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, sceneDepth, 0);
+
+  //the important layer
+  hudTexture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, hudTexture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, bufferWidth, bufferHeight, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  hudDepth = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, hudDepth);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT16, bufferWidth, bufferHeight, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  hudBuffer = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, hudBuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, hudTexture, 0);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, hudDepth, 0);
+
   let unlit = Object.create(Object.prototype);
   unlit.program = await loadShader("/shaders/unlit.vs", "/shaders/unlit.fs");
   unlit.positionLocation = gl.getAttribLocation(unlit.program, "position");
@@ -37,6 +78,23 @@ export async function init() {
   unlit.worldLocation = gl.getUniformLocation(unlit.program, "worldMatrix");
   unlit.baseColorLocation = gl.getUniformLocation(unlit.program, "baseColor");
   shaders.set("unlit", unlit);
+}
+
+export function bindBuffer(buffer) {
+  switch (buffer) {
+    case "scene":
+      gl.bindFramebuffer(gl.FRAMEBUFFER, sceneBuffer);
+      gl.viewport(0,0,bufferWidth, bufferHeight);
+      break;
+    case "hud":
+      gl.bindFramebuffer(gl.FRAMEBUFFER, hudBuffer);
+      gl.viewport(0,0,bufferWidth, bufferHeight);
+      break;
+    default:
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight);
+      break;
+  }
 }
 
 export function getCanvas() {
@@ -69,7 +127,19 @@ function updateCamera() {
 }
 
 export function clear() {
+  gl.bindFramebuffer(gl.FRAMEBUFFER, sceneBuffer);
+  gl.viewport(0,0,bufferWidth, bufferHeight);
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, hudBuffer);
+  gl.viewport(0,0,bufferWidth, bufferHeight);
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  gl.viewport(0,0,bufferWidth, bufferHeight);
+  gl.clearColor(0.0, 0.0, 0.0, 0.0);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 }
 
@@ -84,6 +154,8 @@ export function drawUnlit(mesh, texture, location = vec3.fromValues(0,0,0), rota
   mat4.rotateX(worldMatrix, worldMatrix, rotation[0] * Math.PI/180);
   mat4.rotateY(worldMatrix, worldMatrix, rotation[1] * Math.PI/180);
   mat4.rotateZ(worldMatrix, worldMatrix, rotation[2] * Math.PI/180);
+
+  bindBuffer("");
 
   let unlit = shaders.get("unlit");
   gl.useProgram(unlit.program);
