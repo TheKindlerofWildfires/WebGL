@@ -3,6 +3,7 @@ import * as graphics from "/js/framework/graphics.js";
 import * as time from "/js/util/time.js";
 
 let keyMap = new Map();
+let inputObject = Object.create(Object.prototype);
 let gameCanvas = null;
 let mouseLocation = Object.create(Object.prototype);
 let previousMouseLocation = Object.create(Object.prototype);
@@ -26,10 +27,20 @@ export function tick() {
 
   previousMouseLocation.x = mouseLocation.x;
   previousMouseLocation.y = mouseLocation.y;
+
+  //todo keybindings
+  inputObject.up = getKeyState("KeyW");
+  inputObject.down = getKeyState("KeyS");
+  inputObject.left = getKeyState("KeyA");
+  inputObject.right = getKeyState("KeyD");
 }
 
 export function getMouseDelta() {
   return mouseDelta;
+}
+
+export function getInput() {
+  return inputObject;
 }
 
 function onKeyDown(keyEvent) {
@@ -38,6 +49,14 @@ function onKeyDown(keyEvent) {
 
 function onKeyUp(keyEvent) {
   keyMap.set(keyEvent.code, false);
+}
+
+function getKeyState(keyCode) {
+  if (!keyMap.has(keyCode)) {
+    return false
+  }
+
+  return keyMap.get(keyCode);
 }
 
 function onMouseDown(mouseEvent) {
