@@ -34,6 +34,7 @@ export async function init() {
 	gl.enable(gl.CULL_FACE);
 	gl.frontFace(gl.CCW);
 	gl.cullFace(gl.BACK);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
   console.log("Acquired webgl context successfully!");
 
   compositeBuffer.positionBuffer = gl.createBuffer();
@@ -166,6 +167,8 @@ export function clear() {
 }
 
 export function present() {
+  gl.enable(gl.BLEND);
+  gl.disable(gl.DEPTH_TEST);
   bindBuffer("");
   let composite = shaders.get("composite");
   gl.useProgram(composite.program);
@@ -181,8 +184,11 @@ export function present() {
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 
   gl.bindTexture(gl.TEXTURE_2D, hudTexture);
-  gl.uniform1f(composite.depthLocation, 0.5);
+  gl.uniform1f(composite.depthLocation, -0.5);
   gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+  gl.disable(gl.BLEND);
+  gl.enable(gl.DEPTH_TEST);
 }
 
 export function drawUnlit(mesh, texture, location = vec3.fromValues(0,0,0), rotation = vec3.fromValues(0,0,0), scale = vec3.fromValues(1,1,1)) {
