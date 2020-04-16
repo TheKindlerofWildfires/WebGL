@@ -7,7 +7,7 @@ import * as content from "/js/framework/content.js";
 
 init();
 async function init() {
-  graphics.init();
+  await graphics.init();
   input.init();
   state.init();
 
@@ -15,9 +15,10 @@ async function init() {
 }
 
 function main() {
+  graphics.clear();
   time.tick();
   input.tick();
   state.tick();
-
+  graphics.present();
   requestAnimationFrame(main);
 }

@@ -7,6 +7,7 @@ let gl = null;
 
 const bufferWidth = 1280;
 const bufferHeight = 720;
+let compositeBuffer = Object.create(Object.prototype);
 let sceneBuffer = null;
 let sceneDepth = null;
 let sceneTexture = null;
@@ -34,6 +35,17 @@ export async function init() {
 	gl.frontFace(gl.CCW);
 	gl.cullFace(gl.BACK);
   console.log("Acquired webgl context successfully!");
+
+  compositeBuffer.positionBuffer = gl.createBuffer();
+  compositeBuffer.uvBuffer = gl.createBuffer();
+  {
+    let data = [-1,1, -1,-1, 1,-1, 1,-1, 1,1, -1,1];
+    gl.bindBuffer(gl.ARRAY_BUFFER, compositeBuffer.positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+    data = [0,1, 0,0, 1,0, 1,0, 1,1, 0,1];
+    gl.bindBuffer(gl.ARRAY_BUFFER, compositeBuffer.uvBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
+  }
 
   //2d hud layer
   sceneTexture = gl.createTexture();
@@ -66,6 +78,16 @@ export async function init() {
   gl.bindFramebuffer(gl.FRAMEBUFFER, hudBuffer);
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, hudTexture, 0);
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, hudDepth, 0);
+
+  let composite = Object.create(Object.prototype);
+  composite.program = await loadShader("/shaders/composite.vs", "/shaders/composite.fs");
+  composite.positionLocation = gl.getAttribLocation(composite.program, "position");
+  gl.enableVertexAttribArray(composite.positionLocation);
+  composite.uvLocation = gl.getAttribLocation(composite.program, "uv");
+  gl.enableVertexAttribArray(composite.uvLocation);
+  composite.depthLocation = gl.getUniformLocation(composite.program, "depth");
+  composite.bufferTexture = gl.getUniformLocation(composite.program, "bufferTexture");
+  shaders.set("composite", composite);
 
   let unlit = Object.create(Object.prototype);
   unlit.program = await loadShader("/shaders/unlit.vs", "/shaders/unlit.fs");
@@ -144,7 +166,23 @@ export function clear() {
 }
 
 export function present() {
-  //Buffers not yet implemented
+  bindBuffer("");
+  let composite = shaders.get("composite");
+  gl.useProgram(composite.program);
+  gl.bindBuffer(gl.ARRAY_BUFFER, compositeBuffer.positionBuffer);
+  gl.vertexAttribPointer(composite.positionLocation, 2, gl.FLOAT, false, 0, 0);
+  gl.bindBuffer(gl.ARRAY_BUFFER, compositeBuffer.uvBuffer);
+  gl.vertexAttribPointer(composite.uvLocation, 2, gl.FLOAT, false, 0, 0);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.uniform1i(composite.bufferTexture, 0);
+
+  gl.bindTexture(gl.TEXTURE_2D, sceneTexture);
+  gl.uniform1f(composite.depthLocation, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+  gl.bindTexture(gl.TEXTURE_2D, hudTexture);
+  gl.uniform1f(composite.depthLocation, 0.5);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 
 export function drawUnlit(mesh, texture, location = vec3.fromValues(0,0,0), rotation = vec3.fromValues(0,0,0), scale = vec3.fromValues(1,1,1)) {
@@ -155,7 +193,7 @@ export function drawUnlit(mesh, texture, location = vec3.fromValues(0,0,0), rota
   mat4.rotateY(worldMatrix, worldMatrix, rotation[1] * Math.PI/180);
   mat4.rotateZ(worldMatrix, worldMatrix, rotation[2] * Math.PI/180);
 
-  bindBuffer("");
+  bindBuffer("scene");
 
   let unlit = shaders.get("unlit");
   gl.useProgram(unlit.program);
