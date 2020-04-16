@@ -1,10 +1,15 @@
 "use strict";
+import * as vec3 from "/js/lib/glMatrix/vec3.js";
 //TODO investigate javascript operator overloading
 class vector {
   constructor(x = 0, y = 0, z = 0) {
     this.x = x;
     this.y = y;
     this.z = z;
+  }
+
+  convert() {
+    return vec3.fromValues(x, y z);
   }
 
   //add another vector to this vector
