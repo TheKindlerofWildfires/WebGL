@@ -110,7 +110,7 @@ export function setCameraLocation(location) {
   updateCamera();
 }
 
-export function setCameraRotation(roation) {
+export function setCameraRotation(rotation) {
   camera.rotation = rotation;
   updateCamera();
 }

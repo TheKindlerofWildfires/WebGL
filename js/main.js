@@ -16,6 +16,7 @@ async function init() {
 
 function main() {
   time.tick();
+  input.tick();
   state.tick();
 
   requestAnimationFrame(main);
