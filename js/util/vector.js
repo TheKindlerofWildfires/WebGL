@@ -9,7 +9,7 @@ class vector {
   }
 
   convert() {
-    return vec3.fromValues(x, y z);
+    return vec3.fromValues(this.x, this.y, this.z);
   }
 
   //add another vector to this vector

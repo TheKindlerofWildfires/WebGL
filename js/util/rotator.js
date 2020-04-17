@@ -9,10 +9,10 @@ class rotator {
   }
 
   convert() {
-    return vec3.fromValues(pitch, yaw, roll);
+    return vec3.fromValues(this.pitch, this.yaw, this.roll);
   }
 
-  add(roll, yaw, pitch) {
+  add(pitch, yaw, roll) {
     if (yaw == undefined) {
       this.roll += roll.roll;
       this.yaw += roll.yaw;
@@ -24,7 +24,7 @@ class rotator {
     }
   }
 
-  sub(roll, yaw, pitch) {
+  sub(pitch, yaw, roll) {
     if (yaw == undefined) {
       this.roll -= roll.roll;
       this.yaw -= roll.yaw;
