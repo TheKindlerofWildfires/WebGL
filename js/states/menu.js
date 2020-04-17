@@ -3,13 +3,14 @@ import * as input from "/js/framework/input.js";
 import * as graphics from "/js/framework/graphics.js";
 import * as content from "/js/framework/content.js";
 
-import * as vec3 from "/js/lib/glMatrix/vec3.js";
+import vector from "/js/util/vector.js";
+import rotator from "/js/util/rotator.js";
 
 let baseColor = null;
 let mesh = null;
 
-let cameraRotation = vec3.create();
-let cubeRotation = vec3.create();
+let cubeLocation = new vector(0,0,-4);
+let cubeRotation = new rotator();
 
 export function init() {
   //this is ok as splash already loaded these.
@@ -18,12 +19,7 @@ export function init() {
 }
 
 export function tick(deltaTime) {
-  let inputDelta = input.getMouseDelta();
-  let deltaRotation = vec3.fromValues(inputDelta.y * 500, inputDelta.x * 500, 0);
-  vec3.add(cameraRotation, cameraRotation, deltaRotation);
-  graphics.setCameraRotation(cameraRotation);
-
-  vec3.add(cubeRotation, cubeRotation, vec3.fromValues(0,deltaTime * 50,0));
-  graphics.drawUnlit(mesh, baseColor, vec3.fromValues(0,0,-5), cubeRotation);
-  graphics.drawUnlit(mesh, baseColor, vec3.fromValues(3,0,-5));
+  cubeRotation.add(0, deltaTime * 90, deltaTime * 10);
+  graphics.drawUnlit(mesh, baseColor, cubeLocation, cubeRotation);
+  //graphics.drawUnlit(mesh, baseColor, vec3.fromValues(3,0,-5));
 }

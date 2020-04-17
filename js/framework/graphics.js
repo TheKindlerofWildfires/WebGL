@@ -1,6 +1,8 @@
 "use strict";
 import * as mat4 from "/js/lib/glMatrix/mat4.js";
 import * as vec3 from "/js/lib/glMatrix/vec3.js";
+import vector from "/js/util/vector.js";
+import rotator from "/js/util/rotator.js";
 
 let gameCanvas = null;
 let gl = null;
@@ -185,13 +187,13 @@ export function present() {
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 
-export function drawUnlit(mesh, texture, location = vec3.fromValues(0,0,0), rotation = vec3.fromValues(0,0,0), scale = vec3.fromValues(1,1,1)) {
+export function drawUnlit(mesh, texture, location = new vector(), rotation = new rotator(), scale = new vector(1,1,1)) {
   let worldMatrix = mat4.create();
-  mat4.scale(worldMatrix, worldMatrix, scale);
-  mat4.translate(worldMatrix, worldMatrix, location);
-  mat4.rotateX(worldMatrix, worldMatrix, rotation[0] * Math.PI/180);
-  mat4.rotateY(worldMatrix, worldMatrix, rotation[1] * Math.PI/180);
-  mat4.rotateZ(worldMatrix, worldMatrix, rotation[2] * Math.PI/180);
+  mat4.scale(worldMatrix, worldMatrix, scale.convert());
+  mat4.translate(worldMatrix, worldMatrix, location.convert());
+  mat4.rotateX(worldMatrix, worldMatrix, rotation.pitch * Math.PI/180);
+  mat4.rotateY(worldMatrix, worldMatrix, rotation.yaw * Math.PI/180);
+  mat4.rotateZ(worldMatrix, worldMatrix, rotation.roll * Math.PI/180);
 
   bindBuffer("scene");
 
